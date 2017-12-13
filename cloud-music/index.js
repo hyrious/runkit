@@ -174,7 +174,7 @@ function getMusicUrl(ids) {
 exports.endpoint = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   const id = Number((req.url.match(/\d+/)||[NaN])[0])
-  if (!id) { res.end('<pre>GET / { id } => musics</pre>'); return }
+  if (!id) { return res.end('<pre>GET / { id } => musics</pre>'); }
   res.setHeader('Content-Type', 'application/json')
   try {
     const data = JSON.parse(await getPlaylistDetail(id))

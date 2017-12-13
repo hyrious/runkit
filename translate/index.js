@@ -1,7 +1,7 @@
 const translate = require('translate-api')
 exports.endpoint = (req, res) => {
     if (req.method == 'GET') {
-        res.end('<pre><code>POST / { text[, from, to] } => text</code></pre>')
+        return res.end('<pre><code>POST / { text[, from, to] } => text</code></pre>')
     }
     let data = ""
     req.on('data', x => data += x)

@@ -7,4 +7,6 @@ task :new, [:title, :needs] do |t, args|
   sh "yarn add #{args.needs}" if args.needs
   touch "index.js"
   sh "subl index.js"
+  cd ".."
+  sh "yarn add #{args.needs}" if args.needs
 end

@@ -6,5 +6,11 @@
   "author": "hyrious <hyrious@outlook.com>",
   "license": "WTFPLv2",
   "private": true,
-  "dependencies": {}
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "openssl-self-signed-certificate": "^1.1.6"
+  }
 }

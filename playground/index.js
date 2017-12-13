@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 exports.endpoint = function(request, response) {
     if (request.url.includes('favicon')) {
         response.statusCode = 404;
-        response.end('Not found');
+        return response.end('Not found');
     }
     fetch('https://jsonbin.org/hyrious/play', {
         method: 'GET',

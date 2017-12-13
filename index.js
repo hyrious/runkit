@@ -1,7 +1,10 @@
-const http = require('http')
+require('dotenv').load()
+const https = require('https')
 const title = process.argv[2] || 'playground'
-const entry = require('./' + title)
+const endpoint = require('./' + title).endpoint
 const port = process.env.PORT || 80
+const { key, cert } = require('openssl-self-signed-certificate')
 
-http.createServer(entry.endpoint)
-    .listen(80, () => console.log('http://localhost ' + title))
+process.title = title
+https.createServer({ key, cert }, endpoint)
+  .listen(443, () => console.log('https://localhost ' + title))
