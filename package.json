@@ -1,0 +1,10 @@
+{
+  "name": "runkit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/hyrious/runkit.git",
+  "author": "hyrious <hyrious@outlook.com>",
+  "license": "WTFPLv2",
+  "private": true,
+  "dependencies": {}
+}
