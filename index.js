@@ -4,7 +4,12 @@ const title = process.argv[2] || 'playground'
 const endpoint = require('./' + title).endpoint
 const port = process.env.PORT || 80
 const { key, cert } = require('openssl-self-signed-certificate')
+const opn = require('opn')
+
 
 process.title = title
 https.createServer({ key, cert }, endpoint)
-  .listen(443, () => console.log('https://localhost ' + title))
+  .listen(443, () => {
+    console.log('https://localhost ' + title)
+    opn('https://localhost')
+  })
