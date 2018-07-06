@@ -14,6 +14,7 @@
     "big-integer": "^1.6.26",
     "dotenv": "^4.0.0",
     "micro": "^9.0.2",
+    "node-fetch": "^2.1.2",
     "openssl-self-signed-certificate": "^1.1.6",
     "opn": "^5.1.0"
   }

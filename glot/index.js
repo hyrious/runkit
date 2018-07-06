@@ -1,31 +1,129 @@
-const axios = require("axios")
-const { send } = require('micro')
+const { post } = require("axios")
+const { json, send } = require('micro')
 
-exports.endpoint = (req, res) => {
+exports.endpoint = async (req, res) => {
+    const languages = {
+        asm: { latest: 'https://run.glot.io/languages/assembly/latest' },
+        assembly: { latest: 'https://run.glot.io/languages/assembly/latest' },
+        ats: { latest: 'https://run.glot.io/languages/ats/latest' },
+        sh: { latest: 'https://run.glot.io/languages/bash/latest' },
+        bash: { latest: 'https://run.glot.io/languages/bash/latest' },
+        c: { latest: 'https://run.glot.io/languages/c/latest' },
+        clj: { latest: 'https://run.glot.io/languages/clojure/latest' },
+        clojure: { latest: 'https://run.glot.io/languages/clojure/latest' },
+        cob: { latest: 'https://run.glot.io/languages/cobol/latest' },
+        cobol: { latest: 'https://run.glot.io/languages/cobol/latest' },
+        coffee: { latest: 'https://run.glot.io/languages/coffeescript/latest' },
+        coffeescript: { latest: 'https://run.glot.io/languages/coffeescript/latest' },
+        cpp: { latest: 'https://run.glot.io/languages/cpp/latest' },
+        cr: { latest: 'https://run.glot.io/languages/crystal/latest' },
+        crystal: { latest: 'https://run.glot.io/languages/crystal/latest' },
+        cs: { latest: 'https://run.glot.io/languages/csharp/latest' },
+        csharp: { latest: 'https://run.glot.io/languages/csharp/latest' },
+        d: { latest: 'https://run.glot.io/languages/d/latest' },
+        ex: { latest: 'https://run.glot.io/languages/elixir/latest' },
+        elixir: { latest: 'https://run.glot.io/languages/elixir/latest' },
+        elm: { latest: 'https://run.glot.io/languages/elm/latest' },
+        erlang: { latest: 'https://run.glot.io/languages/erlang/latest' },
+        fs: { latest: 'https://run.glot.io/languages/fsharp/latest' },
+        fsharp: { latest: 'https://run.glot.io/languages/fsharp/latest' },
+        go: { latest: 'https://run.glot.io/languages/go/latest' },
+        groovy: { latest: 'https://run.glot.io/languages/groovy/latest' },
+        hs: { latest: 'https://run.glot.io/languages/haskell/latest' },
+        haskell: { latest: 'https://run.glot.io/languages/haskell/latest' },
+        idr: { latest: 'https://run.glot.io/languages/idris/latest' },
+        idris: { latest: 'https://run.glot.io/languages/idris/latest' },
+        java: { latest: 'https://run.glot.io/languages/java/latest' },
+        js: {
+            es6: 'https://run.glot.io/languages/javascript/es6',
+            latest: 'https://run.glot.io/languages/javascript/latest' },
+        javascript: {
+            es6: 'https://run.glot.io/languages/javascript/es6',
+            latest: 'https://run.glot.io/languages/javascript/latest' },
+        jl: { latest: 'https://run.glot.io/languages/julia/latest' },
+        julia: { latest: 'https://run.glot.io/languages/julia/latest' },
+        kt: { latest: 'https://run.glot.io/languages/kotlin/latest' },
+        kotlin: { latest: 'https://run.glot.io/languages/kotlin/latest' },
+        lua: { latest: 'https://run.glot.io/languages/lua/latest' },
+        m: { latest: 'https://run.glot.io/languages/mercury/latest' },
+        mercury: { latest: 'https://run.glot.io/languages/mercury/latest' },
+        nim: { latest: 'https://run.glot.io/languages/nim/latest' },
+        ocaml: { latest: 'https://run.glot.io/languages/ocaml/latest' },
+        pl: { latest: 'https://run.glot.io/languages/perl/latest' },
+        perl: { latest: 'https://run.glot.io/languages/perl/latest' },
+        pl6: { latest: 'https://run.glot.io/languages/perl6/latest' },
+        perl6: { latest: 'https://run.glot.io/languages/perl6/latest' },
+        php: { latest: 'https://run.glot.io/languages/php/latest' },
+        py: {
+            '2': 'https://run.glot.io/languages/python/2',
+            latest: 'https://run.glot.io/languages/python/latest' },
+        python: {
+            '2': 'https://run.glot.io/languages/python/2',
+            latest: 'https://run.glot.io/languages/python/latest' },
+        rb: { latest: 'https://run.glot.io/languages/ruby/latest' },
+        ruby: { latest: 'https://run.glot.io/languages/ruby/latest' },
+        rs: { latest: 'https://run.glot.io/languages/rust/latest' },
+        rust: { latest: 'https://run.glot.io/languages/rust/latest' },
+        scala: { latest: 'https://run.glot.io/languages/scala/latest' },
+        swift: { latest: 'https://run.glot.io/languages/swift/latest' },
+        ts: { latest: 'https://run.glot.io/languages/typescript/latest' },
+        typescript: { latest: 'https://run.glot.io/languages/typescript/latest' } }
+    const filenames = {
+        assembly: 'main.asm',        asm: 'main.asm',
+        bash: 'main.sh',             sh: 'main.sh',
+        ats: 'main.dats',            dats: 'main.dats',
+        c: 'main.c',
+        coffeescript: 'main.coffee', coffee: 'main.coffee',
+        clojure: 'main.clj',         clj: 'main.clj',
+        cobol: 'main.cob',           cob: 'main.cob',
+        csharp: 'Main.cs',           cs: 'Main.cs',
+        cpp: 'main.cpp',
+        crystal: 'main.cr',          cr: 'main.cr',
+        d: 'main.d',
+        erlang: 'main.erl',          erl: 'main.erl',
+        elm: 'main.elm',
+        elixir: 'main.ex',           ex: 'main.ex',
+        fsharp: 'main.fs',           fs: 'main.fs',
+        go: 'main.go',
+        haskell: 'main.hs',          hs: 'main.hs',
+        groovy: 'main.groovy',
+        idris: 'main.idr',           idr: 'main.idr',
+        java: 'Main.java',
+        lua: 'main.lua',
+        javascript: 'main.js',       js: 'main.js',           es6: 'main.js',
+        kotlin: 'Main.kt',           kt: 'Main.kt',
+        nim: 'main.nim',
+        julia: 'main.jl',            jl: 'main.jl',
+        mercury: 'main.m',           m: 'main.m',
+        ocaml: 'main.ml',            ml: 'main.ml',
+        perl: 'main.pl',             pl: 'main.pl',
+        php: 'main.php',
+        python: 'main.py',           py: 'main.py',           python2: 'main.py',
+        perl6: 'main.pl6',           pl6: 'main.pl6',
+        scala: 'main.scala',
+        swift: 'main.swift',
+        ruby: 'main.rb',             rb: 'main.rb',
+        rust: 'main.rs',             rs: 'main.rs',
+        typescript: 'main.ts',       ts: 'main.ts' }
     if (req.method === 'GET') {
-        return res.end('<pre><code>POST / { lang, stdin, cont } => { [stdout, stderr,] error }</code></pre>')
+        return send(res, 200, `<style>pre{white-space:pre-wrap}</style><pre><code>POST / { lang, [command], [stdin], content } => { stdout, stderr, error }</code></pre><p>languages: ${Object.keys(languages).map(lang=>lang+Object.keys(languages[lang]).filter(e=>e!=='latest').map(e=>'/'+e).join()).join(', ')}</p>`)
     }
-    const langs = {"assembly":{"file":"dio.asm","url":"https://run.glot.io/languages/assembly"},"asm":{"file":"dio.asm","url":"https://run.glot.io/languages/assembly"},"bash":{"file":"dio.sh","url":"https://run.glot.io/languages/bash"},"sh":{"file":"dio.sh","url":"https://run.glot.io/languages/bash"},"ats":{"file":"dio.dats","url":"https://run.glot.io/languages/ats"},"dats":{"file":"dio.dats","url":"https://run.glot.io/languages/ats"},"c":{"file":"dio.c","url":"https://run.glot.io/languages/c"},"coffeescript":{"file":"dio.coffee","url":"https://run.glot.io/languages/coffeescript"},"coffee":{"file":"dio.coffee","url":"https://run.glot.io/languages/coffeescript"},"clojure":{"file":"dio.clj","url":"https://run.glot.io/languages/clojure"},"clj":{"file":"dio.clj","url":"https://run.glot.io/languages/clojure"},"cobol":{"file":"dio.cob","url":"https://run.glot.io/languages/cobol"},"cob":{"file":"dio.cob","url":"https://run.glot.io/languages/cobol"},"csharp":{"file":"dio.cs","url":"https://run.glot.io/languages/csharp"},"cs":{"file":"dio.cs","url":"https://run.glot.io/languages/csharp"},"cpp":{"file":"dio.cpp","url":"https://run.glot.io/languages/cpp"},"crystal":{"file":"dio.cr","url":"https://run.glot.io/languages/crystal"},"cr":{"file":"dio.cr","url":"https://run.glot.io/languages/crystal"},"d":{"file":"dio.d","url":"https://run.glot.io/languages/d"},"erlang":{"file":"dio.erl","url":"https://run.glot.io/languages/erlang"},"erl":{"file":"dio.erl","url":"https://run.glot.io/languages/erlang"},"elm":{"file":"dio.elm","url":"https://run.glot.io/languages/elm"},"elixir":{"file":"dio.ex","url":"https://run.glot.io/languages/elixir"},"ex":{"file":"dio.ex","url":"https://run.glot.io/languages/elixir"},"fsharp":{"file":"dio.fs","url":"https://run.glot.io/languages/fsharp"},"fs":{"file":"dio.fs","url":"https://run.glot.io/languages/fsharp"},"go":{"file":"dio.go","url":"https://run.glot.io/languages/go"},"haskell":{"file":"dio.hs","url":"https://run.glot.io/languages/haskell"},"hs":{"file":"dio.hs","url":"https://run.glot.io/languages/haskell"},"groovy":{"file":"dio.groovy","url":"https://run.glot.io/languages/groovy"},"idris":{"file":"dio.idr","url":"https://run.glot.io/languages/idris"},"idr":{"file":"dio.idr","url":"https://run.glot.io/languages/idris"},"java":{"file":"dio.java","url":"https://run.glot.io/languages/java"},"lua":{"file":"dio.lua","url":"https://run.glot.io/languages/lua"},"javascript":{"file":"dio.js","url":"https://run.glot.io/languages/javascript"},"js":{"file":"dio.js","url":"https://run.glot.io/languages/javascript"},"kotlin":{"file":"dio.kt","url":"https://run.glot.io/languages/kotlin"},"kt":{"file":"dio.kt","url":"https://run.glot.io/languages/kotlin"},"nim":{"file":"dio.nim","url":"https://run.glot.io/languages/nim"},"julia":{"file":"dio.jl","url":"https://run.glot.io/languages/julia"},"jl":{"file":"dio.jl","url":"https://run.glot.io/languages/julia"},"mercury":{"file":"dio.m","url":"https://run.glot.io/languages/mercury"},"m":{"file":"dio.m","url":"https://run.glot.io/languages/mercury"},"ocaml":{"file":"dio.ml","url":"https://run.glot.io/languages/ocaml"},"ml":{"file":"dio.ml","url":"https://run.glot.io/languages/ocaml"},"perl":{"file":"dio.pl","url":"https://run.glot.io/languages/perl"},"pl":{"file":"dio.pl","url":"https://run.glot.io/languages/perl"},"php":{"file":"dio.php","url":"https://run.glot.io/languages/php"},"python":{"file":"dio.py","url":"https://run.glot.io/languages/python"},"py":{"file":"dio.py","url":"https://run.glot.io/languages/python"},"perl6":{"file":"dio.pl6","url":"https://run.glot.io/languages/perl6"},"pl6":{"file":"dio.pl6","url":"https://run.glot.io/languages/perl6"},"scala":{"file":"dio.scala","url":"https://run.glot.io/languages/scala"},"swift":{"file":"dio.swift","url":"https://run.glot.io/languages/swift"},"ruby":{"file":"dio.rb","url":"https://run.glot.io/languages/ruby"},"rb":{"file":"dio.rb","url":"https://run.glot.io/languages/ruby"},"rust":{"file":"dio.rs","url":"https://run.glot.io/languages/rust"},"rs":{"file":"dio.rs","url":"https://run.glot.io/languages/rust"},"typescript":{"file":"dio.ts","url":"https://run.glot.io/languages/typescript"},"ts":{"file":"dio.ts","url":"https://run.glot.io/languages/typescript"}}
-    let data = ""
-    req.on('data', x => data += x)
-    req.on('end', () => {
-        let { lang, stdin, cont: content } = JSON.parse(data)
-        if (!stdin) {
-            stdin = ""
-        }
-        if (!langs[lang]) {
-            send(res, 404, { error: 'language not support' })
-        }
-        data = { stdin, files: [{ name: langs[lang].file, content }] }
-        axios.post(langs[lang].url + '/latest', data,
-            {
-                headers: {
-                    Authorization: 'Token ' + process.env.GLOT_TOKEN,
-                    'Content-type': 'application/json'
-                }
-            }
-        ).then(r => {
-            send(res, 200, r.data)
-        })
-    })
+    let { lang = 'ruby', command = null, stdin = null, content = '' } = await json(req)
+    let payload = { files: [{ name: filenames[lang], content }] }
+    if (command) payload.command = command
+    if (stdin) payload.stdin = stdin
+    let url = null
+    if (lang === 'es6')
+        url = 'https://run.glot.io/languages/javascript/es6'
+    else if (lang === 'python2' || lang === 'py2')
+        url = 'https://run.glot.io/languages/python/2'
+    else if (!languages[lang])
+        send(res, 200, { error: 'language not support' })
+    else
+        url = languages[lang].latest
+    const { data } = await post(url, payload, {
+        headers: {
+            Authorization: 'Token ' + process.env.GLOT_TOKEN,
+            'Content-type': 'application/json' } })
+    send(res, 200, data)
 }
