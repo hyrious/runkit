@@ -1,4 +1,4 @@
-require('dotenv').load()
+require('dotenv').config()
 const http = require('http')
 const title = process.argv[2] || 'playground'
 const endpoint = require('./' + title).endpoint
