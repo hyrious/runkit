@@ -15,7 +15,7 @@
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.0.0",
     "micro": "^9.0.2",
-    "node-fetch": "^2.1.2",
+    "node-fetch": "^2.6.1",
     "openssl-self-signed-certificate": "^1.1.6",
     "opn": "^6.0.0"
   }
